@@ -1,0 +1,9 @@
+{
+  "uuid": "CinnamonMagicLamp@klangman",
+  "name": "Magic Lamp Effect",
+  "version": "1.0.0",
+  "description": "A compiz like magic lamp effect base on the Gnome extension by hermes83",
+  "url": "https://github.com/klangman/CinnamonMagicLamp",
+  "website": "https://github.com/klangman/CinnamonMagicLamp",
+  "cinnamon-version": ["5.4"]
+}
