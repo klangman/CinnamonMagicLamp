@@ -35,15 +35,15 @@ const Util = imports.misc.util;
 const Gettext = imports.gettext;
 const MessageTray = imports.ui.messageTray;
 
-const MINIMIZE_EFFECT_NAME = 'minimize-magic-lamp-effect';
-const UNMINIMIZE_EFFECT_NAME = 'unminimize-magic-lamp-effect';
+const MINIMIZE_EFFECT_NAME = "minimize-magic-lamp-effect";
+const UNMINIMIZE_EFFECT_NAME = "unminimize-magic-lamp-effect";
+
+const UUID = "CinnamonMagicLamp@klangman";
 
 const EffectType = {
    Default: 0,
    Sine: 1
 }
-
-const UUID = "CinnamonMagicLamp@klangman";
 
 Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale");
 
@@ -91,7 +91,7 @@ class CinnamonMagicLamp {
 
    _minimize(e, actor) {
       if (Main.overview.visible) {
-         Main.wm._shellwm.original_completed_minimize(actor);
+         //Main.wm._shellwm.original_completed_minimize(actor);
          return;
       }
       let icon = this.getIcon(actor);
@@ -112,20 +112,20 @@ class CinnamonMagicLamp {
       global.overlay_group.set_child_above_sibling(windowClone, null);
 
       this.destroyActorEffect(actor);
-      metaWindowActor.add_effect_with_name(MINIMIZE_EFFECT_NAME, new MagicLampMinimizeEffect({settingsData: this.settings, icon: icon, clone: windowClone}));
+      metaWindowActor.add_effect_with_name(MINIMIZE_EFFECT_NAME, new MagicLampMinimizeEffect(this.settings, icon, windowClone));
    }
 
    _unminimize(e, actor) {
       actor.show();
 
       if (Main.overview.visible) {
-         Main.wm._shellwm.original_completed_unminimize(actor);
+         //Main.wm._shellwm.original_completed_unminimize(actor);
          return;
       }
 
       let icon = this.getIcon(actor);
       this.destroyActorEffect(actor);
-      actor.add_effect_with_name(UNMINIMIZE_EFFECT_NAME, new MagicLampUnminimizeEffect({settingsData: this.settings, icon: icon}));
+      actor.add_effect_with_name(UNMINIMIZE_EFFECT_NAME, new MagicLampUnminimizeEffect(this.settings, icon));
    }
 
    getIcon(actor) {
@@ -183,15 +183,14 @@ class CinnamonMagicLamp {
    }
 }
 
-class AbstractCommonMagicLampEffect extends Clutter.DeformEffect {
-   static {
-      GObject.registerClass( {GTypeName : `Cjs_AbstractCommonMagicLampEffect_${Math.floor(Math.random() * 100000) + 1}`}, this);
-   }
+var AbstractCommonMagicLampEffect = GObject.registerClass( {GTypeName : `Cjs_AbstractCommonMagicLampEffect_${Math.floor(Math.random() * 100000) + 1}`},
 
-   _init(params = {}) {
+class AbstractCommonMagicLampEffect extends Clutter.DeformEffect {
+
+   _init(settingsData, icon) {
       super._init();
 
-      this.settings = params.settingsData;
+      this.settings = settingsData;
 
       this.EPSILON = 40;
 
@@ -205,7 +204,7 @@ class AbstractCommonMagicLampEffect extends Clutter.DeformEffect {
       this.monitor = {x: 0, y: 0, width: 0, height: 0};
       this.iconMonitor = {x: 0, y: 0, width: 0, height: 0};
       this.window = {x: 0, y: 0, width: 0, height: 0, scale: 1};
-      this.icon = params.icon;
+      this.icon = icon;
 
       this.progress = 0;
       this.split = 0.3;
@@ -339,7 +338,6 @@ class AbstractCommonMagicLampEffect extends Clutter.DeformEffect {
 
    vfunc_deform_vertex(w, h, v) {
       if (this.initialized) {
-         //log( `Icon!: @${this.icon.x},${this.icon.y} for ${this.icon.width},${this.icon.height}` );
          let propX = w / this.window.width;
          let propY = h / this.window.height;
 
@@ -417,18 +415,18 @@ class AbstractCommonMagicLampEffect extends Clutter.DeformEffect {
    }
 }
 
-class MagicLampMinimizeEffect extends AbstractCommonMagicLampEffect {
-   static {
-       GObject.registerClass( {GTypeName : `Cjs_MagicLampMinimizeEffect_${Math.floor(Math.random() * 100000) + 1}`}, this);
-   }
+);
 
-   _init(params = {}) {
-       super._init(params);
+var MagicLampMinimizeEffect = GObject.registerClass( {GTypeName : `Cjs_MagicLampMinimizeEffect_${Math.floor(Math.random() * 100000) + 1}`},
+
+class MagicLampMinimizeEffect extends AbstractCommonMagicLampEffect {
+   _init(settingsData, icon, clone) {
+       super._init(settingsData, icon);
 
        this.k = 0;
        this.j = 0;
        this.isMinimizeEffect = true;
-       this.clone = params.clone;
+       this.clone = clone;
     }
 
     destroy_actor(actor) {
@@ -455,13 +453,13 @@ class MagicLampMinimizeEffect extends AbstractCommonMagicLampEffect {
    }
 }
 
-class MagicLampUnminimizeEffect extends AbstractCommonMagicLampEffect {
-   static {
-      GObject.registerClass( {GTypeName : `Cjs_MagicLampUnminimizeEffect_${Math.floor(Math.random() * 100000) + 1}`}, this);
-   }
+);
 
-   _init(params = {}) {
-      super._init(params);
+var MagicLampUnminimizeEffect = GObject.registerClass( {GTypeName : `Cjs_MagicLampUnminimizeEffect_${Math.floor(Math.random() * 100000) + 1}`},
+
+class MagicLampUnminimizeEffect extends AbstractCommonMagicLampEffect {
+   _init(settingsData, icon) {
+      super._init(settingsData, icon);
 
       this.k = 1;
       this.j = 1;
@@ -489,6 +487,8 @@ class MagicLampUnminimizeEffect extends AbstractCommonMagicLampEffect {
       return false;
    }
 }
+
+);
 
 let extension = null;
 function enable() {
