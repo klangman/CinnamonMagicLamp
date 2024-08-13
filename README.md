@@ -28,6 +28,7 @@ For the latest development version:
     ```
 5. Open the Cinnamon Extensions application (Menu->Preferences->Extensions)
 6. Select the "Magic Lap Effect" entry and then click the "+" button at the bottom of the Extensions window
+7. **Important:** Open the Menu->Preferences->Effects application and change the Minimize and Unminimize effect options to "None"
 8. Use the "gears" icon to open the CinnamonMagicLamp setting window and setup the preferred behaviour
 
 ## Feedback

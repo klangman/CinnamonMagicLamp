@@ -11,7 +11,8 @@
       "default": 0,
       "sine": 1
     },
-    "description": "The type of effect, using sine will result in a more wavy effect"
+    "description": "The type of effect",
+    "tooltip": "Using 'default' will result in a curved effect where using 'sine' will result in a more wavy effect"
   },
 
   "duration": {
@@ -45,5 +46,10 @@
     "step": 1,
     "description": "Y Tiles",
     "tooltip": "This effects the quality of the animation and the CPU costs"
+  },
+
+  "showNotification": {
+     "type": "generic",
+     "default": 1
   }
 }

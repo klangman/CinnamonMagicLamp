@@ -31,6 +31,9 @@ const Main = imports.ui.main;
 const Mainloop = imports.mainloop;
 const Lang = imports.lang;
 const GLib = imports.gi.GLib;
+const Util = imports.misc.util;
+const Gettext = imports.gettext;
+const MessageTray = imports.ui.messageTray;
 
 const MINIMIZE_EFFECT_NAME = 'minimize-magic-lamp-effect';
 const UNMINIMIZE_EFFECT_NAME = 'unminimize-magic-lamp-effect';
@@ -40,7 +43,17 @@ const EffectType = {
    Sine: 1
 }
 
-var abstractClass;
+const UUID = "CinnamonMagicLamp@klangman";
+
+Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale");
+
+function _(text) {
+  let locText = Gettext.dgettext(UUID, text);
+  if (locText == text) {
+    locText = window._(text);
+  }
+  return locText;
+}
 
 class CinnamonMagicLamp {
    constructor(metaData){
@@ -49,15 +62,31 @@ class CinnamonMagicLamp {
    }
 
    enable() {
-      this.settings = new Settings.ExtensionSettings(this, this.meta.uuid);
+      this.settings = new Settings.ExtensionSettings(this, UUID);
       this.signalManager = new SignalManager.SignalManager(null);
       this.signalManager.connect(global.window_manager, "minimize", this._minimize, this);
       this.signalManager.connect(global.window_manager, "unminimize", this._unminimize, this);
+
+      // On first enable, show a notification telling the user that the extension was enabled,
+      // and that they need to disable the default minimize/unminimize Cinnamon effects.
+      if(this.settings.getValue("showNotification")) {
+         let source = new MessageTray.Source(this.meta.name);
+         let notification = new MessageTray.Notification(source, this.meta.name + " " + _("has been enabled"),
+            _("Please set the Cinnamon minimize and unminimize effects to None. These effects will interfere with the Cinnamon Magic Lap effects."),
+            {icon: new St.Icon({icon_name: "cinnamon-magic-lamp", icon_type: St.IconType.FULLCOLOR, icon_size: source.ICON_SIZE })}
+            );
+         notification.addButton("open-effects", _("Open Cinnamon Effects"));
+         notification.connect("action-invoked", () => { Util.spawnCommandLineAsync("cinnamon-settings effects");});
+         Main.messageTray.add(source);
+         source.notify(notification);
+         this.settings.setValue("showNotification", 0);
+      }
    }
 
    disable() {
       this.signalManager.disconnectAllSignals();
       global.get_window_actors().forEach((actor) => { this.destroyActorEffect(actor); });
+      this.settings.setValue("showNotification", 1);
    }
 
    _minimize(e, actor) {
@@ -72,7 +101,7 @@ class CinnamonMagicLamp {
       // we don't really have a showing window to animate. To get around this problem, we create a clone of the already
       // minimized window and put it in the place were the window had existed, then we apply the effect to the clone.
       // This works 99% of the time as long as a clone can be created, but some windows (like steam) don't seem to be
-      // amenable to being cloned and we end up with an animation of the black window on minimize
+      // amenable to being cloned and we end up with an animation of a black window on minimize
       let metaWindowActor = actor.get_meta_window().get_compositor_private();
       let windowClone = WindowUtils.getCloneOrContent(metaWindowActor);
       let [x, y] = metaWindowActor.get_position();
@@ -156,7 +185,7 @@ class CinnamonMagicLamp {
 
 class AbstractCommonMagicLampEffect extends Clutter.DeformEffect {
    static {
-      abstractClass = GObject.registerClass(this);
+      GObject.registerClass( {GTypeName : `Cjs_AbstractCommonMagicLampEffect_${Math.floor(Math.random() * 100000) + 1}`}, this);
    }
 
    _init(params = {}) {
@@ -390,7 +419,7 @@ class AbstractCommonMagicLampEffect extends Clutter.DeformEffect {
 
 class MagicLampMinimizeEffect extends AbstractCommonMagicLampEffect {
    static {
-       GObject.registerClass(this);
+       GObject.registerClass( {GTypeName : `Cjs_MagicLampMinimizeEffect_${Math.floor(Math.random() * 100000) + 1}`}, this);
    }
 
    _init(params = {}) {
@@ -428,7 +457,7 @@ class MagicLampMinimizeEffect extends AbstractCommonMagicLampEffect {
 
 class MagicLampUnminimizeEffect extends AbstractCommonMagicLampEffect {
    static {
-      GObject.registerClass(this);
+      GObject.registerClass( {GTypeName : `Cjs_MagicLampUnminimizeEffect_${Math.floor(Math.random() * 100000) + 1}`}, this);
    }
 
    _init(params = {}) {
