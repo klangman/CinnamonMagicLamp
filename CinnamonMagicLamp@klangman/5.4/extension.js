@@ -138,7 +138,7 @@ class CinnamonMagicLamp {
       let monitor = actor.meta_window.get_monitor();
       let panels = Main.panelManager.getPanelsInMonitor(monitor);
       let loc = -1;
-      let icon = {x: monitor.x + monitor.width / 2, y: monitor.y + monitor.height, width: 0, height: 0};
+      icon = {x: monitor.x + monitor.width / 2, y: monitor.y + monitor.height, width: 0, height: 0};
       // Find a panel and set the icon location to be the middle of the panel.
       // If more than one panel exists, use the below probability order to select
       // the most likely window-list location based on typical usage.

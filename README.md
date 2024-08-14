@@ -1,4 +1,5 @@
 # CinnamonMagicLamp
+
 A compiz like magic lamp effect for the Cinnamon desktop based on hermes83's Gnome extension (https://github.com/hermes83/compiz-alike-magic-lamp-effect)
 
 ![screen shot](CinnamonMagicLamp@klangman/screenshot.png)
@@ -9,7 +10,20 @@ This Cinnamon extension will create a compiz like Magic Lamp minimize and unmini
 
 You must disable the Cinnamon Minimize and Unminimize effects as they will interfere with the operation of the Magic Lamp effect. Open the Menu->Preferences->Effects application and set the "New windows or unminimizing existing ones" and "Minimize windows" features to "None".
 
+## Requirements
+
+Cinnamon 5.6.8 (Mint 21.1) or better.
+
+To properly animate in relation to the window-list icon, you need to be using a window-list applet that sets the icon geometry. Otherwise the animation will animate from/to the middle of the monitor on the Cinnamon panel edge rather than an animation specific to the window. The pre-installed "Window list" and "Grouped window list" applets work fine as does "Cassia Window list" (version 2.3.2 or better). CobiWindowList does not currently set icon geometry.
+
+This applet requires no other packages other than what is included in a default initialization of Mint 21.1 or better.
+
+## Known issues
+
+The Steam client for some reason does not support window cloning when minimized, therefore the "minimize" effect will show a blank/black window rather than the correct window contents. Other application might have the same behaviour but I have not seen any yet.
+
 ## Installation
+
 At some point I will contribute this to cinnamon-spices so that you can use the "Extensions" tool from the cinnamon setting to get this extension, but for now you will need to following these instructions to install manually:
 
 For the latest development version:
@@ -32,6 +46,7 @@ For the latest development version:
 8. Use the "gears" icon to open the CinnamonMagicLamp setting window and setup the preferred behaviour
 
 ## Feedback
+
 Feel free to can create an issue here on Github to give me feedback or to report any issues you find.
 
 If you like this extension, please star it so that more people might learn of it's existence.
