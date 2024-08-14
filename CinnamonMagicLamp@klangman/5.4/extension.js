@@ -34,6 +34,7 @@ const GLib = imports.gi.GLib;
 const Util = imports.misc.util;
 const Gettext = imports.gettext;
 const MessageTray = imports.ui.messageTray;
+const Panel = imports.ui.panel;
 
 const MINIMIZE_EFFECT_NAME = "minimize-magic-lamp-effect";
 const UNMINIMIZE_EFFECT_NAME = "unminimize-magic-lamp-effect";
@@ -134,36 +135,39 @@ class CinnamonMagicLamp {
          return icon;
       }
 
-      let monitor = Main.layoutManager.monitors[actor.meta_window.get_monitor()];
-      if (monitor && Main.overview.dash) {
-         Main.overview.dash._redisplay();
-
-         let dashIcon = null;
-         let transformed_position = null;
-         let pids = null;
-         let pid = actor.get_meta_window() ? actor.get_meta_window().get_pid() : null;
-         if (pid) {
-            Main.overview.dash._box.get_children()
-                 .filter(dashElement => dashElement.child && dashElement.child._delegate && dashElement.child._delegate.app)
-                 .forEach(dashElement => {
-                     pids = dashElement.child._delegate.app.get_pids();
-                     if (pids && pids.indexOf(pid) >= 0) {
-                         transformed_position = dashElement.get_transformed_position();
-                         if (transformed_position && transformed_position[0]) {
-                             dashIcon = {x: transformed_position[0], y: monitor.y + monitor.height, width: 0, height: 0};
-                             return;
-                         }
-                     }
-                 });
+      let monitor = actor.meta_window.get_monitor();
+      let panels = Main.panelManager.getPanelsInMonitor(monitor);
+      let loc = -1;
+      let icon = {x: monitor.x + monitor.width / 2, y: monitor.y + monitor.height, width: 0, height: 0};
+      // Find a panel and set the icon location to be the middle of the panel.
+      // If more than one panel exists, use the below probability order to select
+      // the most likely window-list location based on typical usage.
+      // Window list location probability order: Bottom, Top, Left, Right
+      for (let i = 0; i < panels.length; i++) {
+         if (panels[i].panelPosition == Panel.PanelLoc.top) {
+            loc = Panel.PanelLoc.top;
+            log( "top" );
+            icon.x = panels[i].monitor.x + panels[i].monitor.width / 2;
+            icon.y = panels[i].monitor.y;
+         } else if (loc != Panel.PanelLoc.top && loc != Panel.PanelLoc.left && panels[i].panelPosition == Panel.PanelLoc.right) {
+            loc = Panel.PanelLoc.right;
+            log( "right" );
+            icon.x = panels[i].monitor.x + panels[i].monitor.width;
+            icon.y = panels[i].monitor.y + panels[i].monitor.height / 2;
+         } else if (loc != Panel.PanelLoc.top && panels[i].panelPosition == Panel.PanelLoc.left) {
+            loc = Panel.PanelLoc.left;
+            log( "left" );
+            icon.x = panels[i].monitor.x;
+            icon.y = panels[i].monitor.y + panels[i].monitor.height / 2;
+         } else if (panels[i].panelPosition == Panel.PanelLoc.bottom) {
+            loc = Panel.PanelLoc.bottom;
+            log( "bottom" );
+            icon.x = panels[i].monitor.x + panels[i].monitor.width / 2;
+            icon.y = panels[i].monitor.y + panels[i].monitor.height;
+            break;
          }
-         if (dashIcon) {
-            return dashIcon;
-         }
-
-         return {x: monitor.x + monitor.width / 2, y: monitor.y + monitor.height, width: 0, height: 0};
       }
-
-      return {x: 0, y: 0, width: 0, height: 0};
+      return icon;
    }
 
    destroyActorEffect(actor) {
