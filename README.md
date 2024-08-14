@@ -47,7 +47,7 @@ For the latest development version:
 
 ## Feedback
 
-Feel free to can create an issue here on Github to give me feedback or to report any issues you find.
+Feel free to create an issue here on Github to give me feedback or to report any issues you find.
 
 If you like this extension, please star it so that more people might learn of it's existence.
 Also, the more stars it gets the more encouragement I'll have to continue working on it.

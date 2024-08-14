@@ -146,22 +146,18 @@ class CinnamonMagicLamp {
       for (let i = 0; i < panels.length; i++) {
          if (panels[i].panelPosition == Panel.PanelLoc.top) {
             loc = Panel.PanelLoc.top;
-            log( "top" );
             icon.x = panels[i].monitor.x + panels[i].monitor.width / 2;
             icon.y = panels[i].monitor.y;
          } else if (loc != Panel.PanelLoc.top && loc != Panel.PanelLoc.left && panels[i].panelPosition == Panel.PanelLoc.right) {
             loc = Panel.PanelLoc.right;
-            log( "right" );
             icon.x = panels[i].monitor.x + panels[i].monitor.width;
             icon.y = panels[i].monitor.y + panels[i].monitor.height / 2;
          } else if (loc != Panel.PanelLoc.top && panels[i].panelPosition == Panel.PanelLoc.left) {
             loc = Panel.PanelLoc.left;
-            log( "left" );
             icon.x = panels[i].monitor.x;
             icon.y = panels[i].monitor.y + panels[i].monitor.height / 2;
          } else if (panels[i].panelPosition == Panel.PanelLoc.bottom) {
             loc = Panel.PanelLoc.bottom;
-            log( "bottom" );
             icon.x = panels[i].monitor.x + panels[i].monitor.width / 2;
             icon.y = panels[i].monitor.y + panels[i].monitor.height;
             break;
