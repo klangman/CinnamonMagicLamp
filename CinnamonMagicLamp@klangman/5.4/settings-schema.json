@@ -34,7 +34,7 @@
     "units": "tiles",
     "step": 1,
     "description": "X Tiles",
-    "tooltip": "This effects the quality of the animation and the CPU costs"
+    "tooltip": "This effects the quality and the cost of the animation"
   },
 
   "y-tiles": {
@@ -45,7 +45,7 @@
     "units": "tiles",
     "step": 1,
     "description": "Y Tiles",
-    "tooltip": "This effects the quality of the animation and the CPU costs"
+    "tooltip": "This effects the quality and the costs of the animation"
   },
 
   "showNotification": {
