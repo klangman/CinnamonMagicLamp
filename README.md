@@ -16,7 +16,7 @@ Cinnamon 5.6.8 (Mint 21.1) or better.
 
 To properly animate in relation to the window-list icon, you need to be using a window-list applet that sets the icon geometry. Otherwise the animation will animate from/to the middle of the monitor on the Cinnamon panel edge rather than an animation specific to the window. The pre-installed "Window list" and "Grouped window list" applets work fine as does "Cassia Window list" (version 2.3.2 or better). CobiWindowList does not currently set icon geometry.
 
-This applet requires no other packages other than what is included in a default initialization of Mint 21.1 or better.
+This extension requires no other packages other than what is included in a default installation of Mint 21.1 or better.
 
 ## Known issues
 
@@ -24,9 +24,10 @@ The Steam client for some reason does not support window cloning when minimized,
 
 ## Installation
 
-At some point I will contribute this to cinnamon-spices so that you can use the "Extensions" tool from the cinnamon setting to get this extension, but for now you will need to following these instructions to install manually:
+For the "Stable" version, use the "Extensions" tool from the cinnamon setting, click the "Download" tab and find "Cinnamon Magic Lamp"
 
-For the latest development version:
+For the development version you will need to following these instructions to install manually:
+
 1. Clone the repo (or Download the latest repo by clinking on the green "code" button above then click "Download ZIP")
     ```
     git clone git@github.com:klangman/CinnamonMagicLamp.git
