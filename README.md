@@ -6,10 +6,6 @@ A compiz like magic lamp effect for the Cinnamon desktop based on hermes83's Gno
 
 This Cinnamon extension will create a compiz like Magic Lamp minimize and unminimize effect
 
-## IMPORTANT
-
-You must disable the Cinnamon Minimize and Unminimize effects as they will interfere with the operation of the Magic Lamp effect. Open the Menu->Preferences->Effects application and set the "New windows or unminimizing existing ones" and "Minimize windows" features to "None".
-
 ## Requirements
 
 Cinnamon 5.6.8 (Mint 21.1) or better.
